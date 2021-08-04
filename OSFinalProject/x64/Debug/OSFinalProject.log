@@ -1,0 +1,11 @@
+﻿  HaifaPort.c
+C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\OSFinalProject\HaifaPort.c(62,4): warning C4098: 'main': 'void' function returning a value
+C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\OSFinalProject\HaifaPort.c(67,4): warning C4098: 'main': 'void' function returning a value
+C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\OSFinalProject\HaifaPort.c(90,4): warning C4098: 'main': 'void' function returning a value
+C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\OSFinalProject\HaifaPort.c(95,4): warning C4098: 'main': 'void' function returning a value
+C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\OSFinalProject\HaifaPort.c(104,5): warning C4098: 'main': 'void' function returning a value
+C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\OSFinalProject\HaifaPort.c(158,16): warning C4133: 'function': incompatible types - from 'FILE *' to 'const char *const '
+C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\OSFinalProject\HaifaPort.c(173,20): warning C4133: 'function': incompatible types - from 'FILE *' to 'const char *const '
+C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\OSFinalProject\HaifaPort.c(234): warning C4716: 'HaifaPort': must return a value
+C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\OSFinalProject\HaifaPort.c(189): warning C4716: 'HaifaToEilat': must return a value
+  OSFinalProject.vcxproj -> C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\x64\Debug\Haifa.exe
