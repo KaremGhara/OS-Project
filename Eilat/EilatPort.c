@@ -14,35 +14,46 @@
 #define BUFFER_SIZE 100
 
 //Functions
+char* func_time();
 void readVesselNum();
 void readVessels();
 void InitCrane(int);
+BOOL checkDivisor(int craneNum);
 DWORD WINAPI vessThreads(PVOID Param);
 DWORD WINAPI craneeThreads(PVOID Param);
-int RandomNumber(int);
-void toBarrier(int);
-
+DWORD WINAPI barrierFun(PVOID Param[]);
+int RandomNumber();
+void InitBarrier();
 //Variables
-int vessels[maxVesselNum];
+HANDLE barrierThread;
+int cnt = 0;
+int *vessels;
 int vesselNum;
 char buffer[BUFFER_SIZE];
 BOOL isRead;
-HANDLE ReadHandle, WriteHandle, mutex, rndMutex, sem[maxVesselNum];
+HANDLE ReadHandle, WriteHandle, mutex, rndMutex, sem[maxVesselNum],barrierMutex;
 DWORD read, written, ThreadID;
 HANDLE vesThreads[maxVesselNum],craneThreads[maxVesselNum];
-int vesThreadsID[maxVesselNum];
+int vesThreadsID[maxVesselNum], barrierArr[maxVesselNum];
 int cranesID[maxVesselNum];
+int craneNum,vesID;
+int vesArr[maxVesselNum];
+int* vess;
+SYNCHRONIZATION_BARRIER sb;
 
 void main(VOID)
 {
-
-	readVesselNum();
-	readVessels();
 	if (initGlobalData() == FALSE) {
 		printf("main::Unexpected Error in Global Semaphore Creation\n");
-		
+
 	}
+	readVesselNum();
+	readVessels();
 	InitCrane(vesselNum);
+	//InitVesID();
+	InitBarrier(vesID);
+
+
 
 }
 
@@ -67,37 +78,73 @@ void readVesselNum() {
 }
 //
 void readVessels() {
-
-	for (int i = 1; i <= vesselNum; i++)
+	vessels = (int*)malloc(vesselNum * sizeof(int));
+	for (int i = 0; i <vesselNum; i++)
 	{
-		isRead = ReadFile(ReadHandle, &vessels[i - 1], sizeof(int), &read, NULL);
+		isRead = ReadFile(ReadHandle, &vessels, sizeof(int), &read, NULL);
 		if (isRead) {
-			vesThreadsID[i - 1] = i;
-			vesThreads[i - 1] = CreateThread(NULL, 0, vessThreads, &vesThreadsID[i - 1], 0, &ThreadID);
+			WaitForSingleObject(mutex, INFINITE);
+			vesThreads[i]  = CreateThread(NULL, 0, vessThreads, &vessels, 0, &ThreadID);
 			Sleep(RandomizeSleep());
-			if (vesThreads[i - 1] == NULL) {
+
+			if (vesThreads[i] == NULL) {
 				printf("Vessel Thread::Unexpected Error in Vessel %d  Creation\n", i);
+				exit(0);
+			}
+			if(!ReleaseMutex(mutex)) printf("Mutex::Unexpected Error\n");
+
+			//vesThreadsID[i] = vessels[i];
+
+		}
+	}
+	
+}
+
+void InitCrane(int vesselNum) {
+	int craneNum = RandomNumber();
+	fprintf(stderr, "\n Rand : %d\n", craneNum);
+	while (Divisor(craneNum)) {
+		fprintf(stderr, "\n Rand : %d\n", craneNum);
+		craneNum = RandomNumber(); 
+		break;
+	}
+		for (int i = 0; i <	 craneNum; i++)
+		{
+			cranesID[i] = i+1;
+			craneThreads[i] = CreateThread(NULL, 0, craneeThreads, &cranesID[i], 0, &ThreadID);
+			Sleep(RandomizeSleep());
+			if (vesThreads[i] == NULL) {
+				printf("Vessel Thread::Unexpected Error in Vessel %d  Creation\n", i+1);
 				exit(0);
 			}
 		}
 	}
-}
 
-void InitCrane(vesselNum) {
-	int craneNum = RandomNumber(vesselNum);
-	for (int i = 1; i <= craneNum; i++)
-	{
-		cranesID[i - 1] = i;
-		craneThreads[i - 1] = CreateThread(NULL, 0, craneeThreads, &cranesID[i - 1], 0, &ThreadID);
-		Sleep(RandomizeSleep());
-		if (vesThreads[i - 1] == NULL) {
-			printf("Vessel Thread::Unexpected Error in Vessel %d  Creation\n", i);
-			exit(0);
-		}
-	}
+
+BOOL Divisor(int randNum) {
+	if ((vesselNum % randNum != 0) || (randNum == vesselNum) || (randNum == 1))
+		return FALSE;
+	else
+		return TRUE;
 }
 
 
+//int checkDivisor(int craneNum) {
+//	
+//	if (craneNum == 2) {
+//		return 2;
+//	}
+//	for (int i = 3; i < craneNum; i++)
+//	{
+//		if (((craneNum % i) == 0) && (craneNum > 1) && (craneNum < vesselNum)) {
+//			return i;
+//		}
+//		else return 0;
+//	}
+//
+//	
+//	
+//}
 
 int checkPrime(int vesselNum)
 {
@@ -108,30 +155,70 @@ int checkPrime(int vesselNum)
 }
 
 DWORD WINAPI vessThreads(PVOID Param) {
-	int vesID = *(int*)Param;
-	Sleep(RandomizeSleep());
-	fprintf(stderr, "\nVessel %d arrived in Eilat!\n", vesID);
-	toBarrier(vesID);
+	
+		vesID = *(int*)Param;
+		vesArr[cnt] = vesID;
+		cnt++;
+		Sleep(RandomizeSleep());
+		fprintf(stderr, "\n%s - Vessel %d arrived @ Eilat Port!\n", func_time(), vesID);
+		Sleep(RandomizeSleep());
+		
+	
 	return 0;
-	  
-}
-void toBarrier(int vesID) {
-
 }
 
+
+//void InitVesID() {
+//	for (int i = 0; i < vesselNum; i++)
+//	{
+//		vesArr[i] = vesThreadsID[i];
+//	}
+//
+//	
+//
+//}
+void InitBarrier() {
+	
+	 barrierThread = CreateThread(NULL, 0, barrierFun,NULL , 0, NULL);
+	 Sleep(RandomizeSleep());
+	 if (barrierThread == NULL) {
+		 printf("Barrier Thread::Unexpected Error in Vessel Creation\n");
+		 exit(0);
+	 }
+	
+
+}
+//Here we let every vessel enter the barrier with an array and we check the num of vessel(threads) that in the array if the vessel
+	//num is equal to vesselNum we open the barrier! and print a good message to inform the user(me:D)!
+DWORD WINAPI barrierFun(PVOID Param[]) {
+	fprintf(stderr, "\n%s - Barrier is ready to welcome the Vessels\n",func_time());
+	WaitForSingleObject(barrierMutex, INFINITE);
+	
+	for (int i = 0; i < vesselNum; i++)
+	{
+		fprintf(stderr,"\n%s - Vessel %d is ready to  enter the  Barrier\n", func_time(), vesArr[i]);
+		
+
+		
+	}
+	Sleep(RandomizeSleep());
+	if (!ReleaseMutex(barrierMutex))
+		printf("barrier::Unexpected error barrierMutex.V()\n");
+}
 
 DWORD WINAPI craneeThreads(PVOID Param) {
-
+	
 	int craneID = *(int*)Param;
-	Sleep(RandomizeSleep());
-	fprintf(stderr,"\nCrane %d has been created!\n", craneID);
+	//Sleep(RandomizeSleep());
+	fprintf(stderr,"\n%s - Crane %d has been created!\n",func_time() ,craneID);
 	Sleep(RandomizeSleep());
 	return 0;
 }
-int RandomNumber(int vesselNum) {
+int RandomNumber() {
 	WaitForSingleObject(rndMutex, INFINITE);
 	srand(time(NULL));
-	int res =rand()% vesselNum +1;
+	int res =((rand())% (vesselNum+1));
+	
 	if (!ReleaseMutex(rndMutex))
 		printf("RandomNumber::Unexpected error rndMutex.V()\n");
 	return res;
@@ -146,7 +233,10 @@ BOOL initGlobalData()
 	{
 		return FALSE;
 	}
-
+	barrierMutex = CreateMutex(NULL, FALSE, NULL);
+	if (barrierMutex==NULL) {
+		return FALSE;
+	}
 	rndMutex = CreateMutex(NULL, FALSE, NULL);
 	if (rndMutex == NULL)
 	{
@@ -164,6 +254,18 @@ BOOL initGlobalData()
 
 	return TRUE;
 }
+
+char* func_time() {
+	static char currTimeNow[20];
+	time_t rawtime;
+	struct tm* timeinfo;
+	time(&rawtime);
+	timeinfo = localtime(&rawtime);
+	sprintf(currTimeNow, "[%02d:%02d:%02d]", timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
+	return currTimeNow;
+
+}
+
 int RandomizeSleep()
 {
 	int res;

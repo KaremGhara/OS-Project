@@ -13,6 +13,8 @@
 
 
 //Functions
+char* func_time();
+
 DWORD WINAPI HaifaPort(PVOID Param);
 int CheckVessNum(int);
 int InitPipes();
@@ -40,11 +42,31 @@ HANDLE rndMutex, mutex,sem[maxVesselNUM];
 //Time Variable
 time_t timeNow;
 char timeInLocal[70];
-int* dynamicNumber;
+int  *ptr,eleNum;
 
 
-int main(int argc,char*argv[]) {
-	/*vesselNum =atoi(argv[1]);*/
+
+//	// Get the number of elements for the array
+//	
+//	// Dynamically allocate memory using malloc()
+//	ptr = (int*)malloc(vesselNum * sizeof(int));
+//
+//	// Check if the memory has been successfully
+//	// allocated by malloc or not
+//	if (ptr == NULL) {
+//		printf("Memory not allocated.\n");
+//		exit(0);
+//	}
+//	else {
+//		// Get the elements of the array
+//		for (int i = 0; i < vesselNum; ++i) {
+//			ptr[i] = i + 1;
+//		}
+//		
+//	}
+
+
+int main() {
 	printf("Enter vessel number!:");
 	scanf_s("%d", &vesselNum);
 	if (CheckVessNum(vesselNum) == 1) {
@@ -214,7 +236,7 @@ int CheckVessNum(int vesselNum) {
 
 DWORD WINAPI HaifaPort(PVOID Param) {
 	int vesselID = *(int*)Param;
-	printf("\nVessel %d starts sailing @ Haifa port\n", vesselID);
+	fprintf(stderr,"\n%s - Vessel %d starts sailing @ Haifa port\n",func_time(),vesselID);
 	Sleep(RandomizeSleep());
 	SendVessels(vesselID);
 	Sleep(RandomizeSleep());
@@ -240,16 +262,32 @@ DWORD WINAPI HaifaPort(PVOID Param) {
 //	}
 //}
 
+
+
+//void f()
+//{
+//	char* p = (char*)malloc(10);
+//	*p = '\0';
+//
+//	// code ...
+//	free(p);
+//}
+
+
 void SendVessels(int vesID) {
-	
-	
+	ptr = (int*)malloc(maxVesselNUM * sizeof(int));
+	*ptr = vesID;
+	Sleep(RandomizeSleep());
+	//fprintf(stderr,"\n hiii %d\n", vesID);
 	for (int i = 0; i < vesselNum; i++)
 	{
 		WaitForSingleObject(mutex, INFINITE);
-		printf("\nVessel %d - entering Canal: Med. Sea ==> Red. Sea\n", vesID);
-		if (!WriteFile(inWriteHandle, &vesID, sizeof(int), &written, NULL)) {
+		ptr[i] = vesID;
+		fprintf(stderr,"\n%s - Vessel %d - entering Canal: Med. Sea ==> Red. Sea\n",func_time() ,vesID);
+		if (!WriteFile(inWriteHandle, &ptr[i], sizeof(int), &written, NULL)) {
 			printf(stderr, "Error writing to pipe-father\n");
 		}
+
 		else {
 			if (!ReleaseMutex(mutex)) { printf("Send Vessels::Unexpected error mutex.V()\n"); }
 			//	WaitForSingleObject(sem[vesID], INFINITE);
@@ -257,15 +295,23 @@ void SendVessels(int vesID) {
 			
 
 		}
+		free(ptr);
 	}
 	return 0;
 }
 	
-//	
-//
-//	
-//			
-//}
+
+
+char* func_time() {
+	 static char currTimeNow[20];
+	time_t rawtime;
+	struct tm* timeinfo;
+	time(&rawtime);
+	timeinfo = localtime(&rawtime);
+	sprintf(currTimeNow,"[%02d:%02d:%02d]", timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
+	return currTimeNow;
+	
+}
 
 
 

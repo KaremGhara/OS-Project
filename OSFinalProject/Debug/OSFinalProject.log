@@ -1,6 +1,6 @@
 ﻿  HaifaPort.c
-C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\OSFinalProject\HaifaPort.c(153,16): warning C4133: 'function': incompatible types - from 'FILE *' to 'const char *const '
-C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\OSFinalProject\HaifaPort.c(251,17): warning C4133: 'function': incompatible types - from 'FILE *' to 'const char *const '
-C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\OSFinalProject\HaifaPort.c(261,10): warning C4098: 'SendVessels': 'void' function returning a value
-C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\OSFinalProject\HaifaPort.c(179): warning C4715: 'HaifaToEilat': not all control paths return a value
+C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\OSFinalProject\HaifaPort.c(175,16): warning C4133: 'function': incompatible types - from 'FILE *' to 'const char *const '
+C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\OSFinalProject\HaifaPort.c(288,17): warning C4133: 'function': incompatible types - from 'FILE *' to 'const char *const '
+C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\OSFinalProject\HaifaPort.c(300,10): warning C4098: 'SendVessels': 'void' function returning a value
+C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\OSFinalProject\HaifaPort.c(201): warning C4715: 'HaifaToEilat': not all control paths return a value
   OSFinalProject.vcxproj -> C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\Debug\Haifa.exe
