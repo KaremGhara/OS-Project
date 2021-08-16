@@ -1,8 +1,11 @@
 ﻿  EilatPort.c
-C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\Eilat\EilatPort.c(46,20): warning C4013: 'initGlobalData' undefined; assuming extern returning int
-C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\Eilat\EilatPort.c(68,17): warning C4013: 'checkPrime' undefined; assuming extern returning int
-C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\Eilat\EilatPort.c(88,24): warning C4013: 'RandomizeSleep' undefined; assuming extern returning int
-C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\Eilat\EilatPort.c(105,16): warning C4013: 'Divisor' undefined; assuming extern returning int
-C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\Eilat\EilatPort.c(217,18): warning C4244: 'function': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\Eilat\EilatPort.c(205): warning C4716: 'barrierFun': must return a value
+C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\Eilat\EilatPort.c(55,20): warning C4013: 'initGlobalData' undefined; assuming extern returning int
+C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\Eilat\EilatPort.c(79,17): warning C4013: 'checkPrime' undefined; assuming extern returning int
+C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\Eilat\EilatPort.c(99,24): warning C4013: 'RandomizeSleep' undefined; assuming extern returning int
+C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\Eilat\EilatPort.c(116,19): warning C4013: 'funDevider' undefined; assuming extern returning int
+C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\Eilat\EilatPort.c(283,17): warning C4133: 'function': incompatible types - from 'FILE *' to 'const char *const '
+C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\Eilat\EilatPort.c(294,10): warning C4098: 'sendVessel': 'void' function returning a value
+C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\Eilat\EilatPort.c(328,15): warning C4244: 'function': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\Eilat\EilatPort.c(337,6): warning C4101: 'i': unreferenced local variable
+C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\Eilat\EilatPort.c(308): warning C4716: 'RandomWeight': must return a value
   Eilat.vcxproj -> C:\Users\karem\Desktop\OSFinalProj\OSFinalProject\Debug\Eilat.exe
